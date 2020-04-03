@@ -37,7 +37,7 @@
       <form @submit.prevent="addSkill">
         <!-- 9.რასაც ჩავწერთ ამ Input-ში , ჩაიწერება skill ცვლადშიც, რადგან v-model=”skill”-ს -->
         <!-- უნდა ჩასვა ამ ტაგებში და რულებში ეწერება რაც გინდოდა v-validate აღარ მუშაობს განახლებულზე, ძველი ვერსია კი არ აქვთ -->
-        <ValidationProvider rules="min_value:4" v-slot="{ errors }">
+        <ValidationProvider rules="min:4" v-slot="{ errors }">
             <input type="text" v-model="skill">
             <span>{{ errors[0] }}</span>
         </ValidationProvider>
@@ -60,6 +60,12 @@
 <script>
 //vee-validate ლოკალურ კომპოონენტში შემოტანა (რატომღაც გლობალურზე ურევ ალბათ ბაგი აქვთ)
 import { ValidationProvider } from 'vee-validate';
+import { extend } from 'vee-validate';
+
+extend('min', value => {
+  return value.length >= 3;
+});
+
 export default {
   // checked: false,
   name: "Skills",
