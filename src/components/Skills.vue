@@ -60,8 +60,9 @@
 <script>
 //vee-validate ლოკალურ კომპოონენტში შემოტანა (რატომღაც გლობალურზე ურევ ალბათ ბაგი აქვთ)
 import { ValidationProvider } from 'vee-validate';
+//ესს rules რომ დაამატო
 import { extend } from 'vee-validate';
-
+// აქ წერ რა პირობა გინდა (ცოდა ზედმეტი დავიდარება მგონია ეს ახალი ვერსია)
 extend('min', value => {
   return value.length >= 3;
 });
