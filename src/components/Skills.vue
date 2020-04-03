@@ -36,7 +36,12 @@
       <!-- 10. Submit-ზე (enter-ზე) დარეფრეშების გარეშე(prevent) გამოიძახებს ფუნქციას addSkill -->
       <form @submit.prevent="addSkill">
         <!-- 9.რასაც ჩავწერთ ამ Input-ში , ჩაიწერება skill ცვლადშიც, რადგან v-model=”skill”-ს -->
-        <input type="text" placeholder="Enter a skill you have.." v-model="skill" v-validate="'min:5'" name="skill" />
+        <!-- უნდა ჩასვა ამ ტაგებში და რულებში ეწერება რაც გინდოდა v-validate აღარ მუშაობს განახლებულზე, ძველი ვერსია კი არ აქვთ -->
+        <ValidationProvider rules="min_value:4" v-slot="{ errors }">
+            <input type="text" v-model="skill">
+            <span>{{ errors[0] }}</span>
+        </ValidationProvider>
+
 
         <!-- <p class="alert" v-if="errors.has('skill')"> {{ errors.first('skill') }}</p> -->
 
@@ -53,14 +58,20 @@
 </template>
 
 <script>
+//vee-validate ლოკალურ კომპოონენტში შემოტანა (რატომღაც გლობალურზე ურევ ალბათ ბაგი აქვთ)
+import { ValidationProvider } from 'vee-validate';
 export default {
   // checked: false,
   name: "Skills",
+  //  დარეგისტრირება ValidationProvider
+  components: {
+    ValidationProvider,
+  },
   data() {
     return {
       // name: 'Coursetro',
       // btnState: true,
-      skill: "",
+      skill: null,
       skills: [{ skill: "Vue.js" }, { skill: "front-end developer" }]
       // showAlert: true,
       // showClass: true
