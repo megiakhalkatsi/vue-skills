@@ -36,21 +36,37 @@
       <!-- 10. Submit-ზე (enter-ზე) დარეფრეშების გარეშე(prevent) გამოიძახებს ფუნქციას addSkill -->
       <form @submit.prevent="addSkill">
         <!-- 9.რასაც ჩავწერთ ამ Input-ში , ჩაიწერება skill ცვლადშიც, რადგან v-model=”skill”-ს -->
+        <!-- ძველი მეთოდი -->
+         <!-- <input type="text" placeholder="Enter a skill you have.." v-model="skill" v-validate="'min:5'" name="skill" /> -->
+        <!-- <p class="alert" v-if="errors.has('skill')"> {{ errors.first('skill') }}</p> -->
+        
+        <!-- ახალი მეთოდი -->
         <!-- უნდა ჩასვა ამ ტაგებში და რულებში ეწერება რაც გინდოდა v-validate აღარ მუშაობს განახლებულზე, ძველი ვერსია კი არ აქვთ -->
         <ValidationProvider rules="min:4" v-slot="{ errors }">
-            <input type="text" v-model="skill">
-            <span>{{ errors[0] }}</span>
+            <input type="text" placeholder="Enter a skill you have.." v-model="skill" name="skill">
+          <!-- 11. Vue ანიმაციებისთვის ვიყენებთ თეგს transition0ს. იმ შემთხვევაში თუ ვიყენებთ ბიბლიოთკას, 
+          მაგ: animate.css -ს enter-active-class-ითა და leave-active-class-ით დავადებთ ამ ბიბლიოთეკის კლასებს -->
+            <transition name="alert-in" enter-active-class="animated flipInX" leave-active-class="animated flipOutX">
+            <p class="alert">{{ errors[0] }}</p>
+            </transition>
         </ValidationProvider>
 
 
         <!-- <p class="alert" v-if="errors.has('skill')"> {{ errors.first('skill') }}</p> -->
 
-        <!-- 11. როცა მოპწიჩკული არ იქნება, checked ცვლადი დააბრუნებს false-ს, როცა მოპწიჭკული იქნეა true-ს -->
+        <!-- 12. როცა მოპწიჩკული არ იქნება, checked ცვლადი დააბრუნებს false-ს, როცა მოპწიჭკული იქნეა true-ს -->
         <!-- <input type="checkbox" id="checkbox"  v-model="checked"> -->
       </form>
 
       <ul>
-        <li v-for="(data, index) in skills" :key="index">{{data.skill}}</li>
+        <!-- 13. ანიმაცია ლისტებისთვის ვიყენებთ transition-group -->
+         <transition-group name="list" enter-active-class="animated bounceInUp" leave-active-class="animated bounceOutDown">
+        <li v-for="(data, index) in skills" :key="index">
+          {{data.skill}}
+          <!-- წაშლა -->
+          <i class="fa fa-minus-circle" v-on:click="remove(index)"></i>
+          </li>
+         </transition-group>
       </ul>
       <p>There are the skills that you possess</p>
     </div>
@@ -95,6 +111,9 @@ export default {
     addSkill() {
       this.skills.push({skill: this.skill})
       this.skill = '';
+    },
+    remove(id) {
+      this.skills.splice(id,1);
     }
   }
 };
@@ -102,6 +121,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+/* შემოვიტანოთ ანიმაციებისთვის ბიბლიოთეკა animate.css */
+@import "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css";
+/* font-awesome აიქონებისთვის შემოვიტანოთ ბიბლიოთეკა */
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
+
+
 /* .alert{
     background-color: yellow;
     width: 100%;
@@ -147,6 +173,38 @@ input {
   font-size: 1.3em;
   background-color: #323333;
   color: #687f7f;
+}
+
+.alert{
+  background-color: #fdf2ce;
+  font-weight: bold;
+  display: inline-block;
+  padding: 5px;
+  width: 100%;
+  margin-top: -20px;
+}
+
+.alert-in-enter-active{
+  animation: bounce-in .5s;
+}
+.alert-in-leave-active{
+  animation: bounce-in .5s reverse;
+}
+@keyframes bounce-in {
+  0%{
+    transform: scale(0);
+  }
+   50%{
+    transform: scale(1.5);
+  }
+   100%{
+    transform: scale(1);
+  }
+}
+
+i{
+  float: right;
+  cursor: pointer;
 }
 </style>
 
